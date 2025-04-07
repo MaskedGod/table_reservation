@@ -1,7 +1,7 @@
 [project]
 name = "table-reservation"
 version = "0.1.0"
-description = "Add your description here"
+description = "Restaurant Reservation API"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -14,3 +14,17 @@ dependencies = [
     "sqlalchemy>=2.0.40",
     "uvicorn>=0.34.0",
 ]
+
+
+# Pytest config
+# Define Python path for test discovery
+# This ensures that pytest recognizes modules inside the "app" directory
+[tool.pytest.ini_options]
+pythonpath = [
+".", "app"
+]
+# Enable automatic handling of async tests
+# This allows pytest to handle async functions without needing
+# the @pytest.mark.asyncio decorator on every async test
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

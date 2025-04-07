@@ -1,9 +1,7 @@
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
+from fastapi import FastAPI
 
 
-from app.core.database import get_db
+from app.routers import tables, reservations
 
 
 app = FastAPI(
@@ -12,12 +10,5 @@ app = FastAPI(
 )
 
 
-@app.get("/")
-async def health_check(session=Depends(get_db)):
-    "Return database connection status"
-    try:
-        await session.execute(text("SELECT 1"))
-    except SQLAlchemyError as err:
-        raise HTTPException(503, detail={"status": "down", "db": "unhealthy"}) from err
-    else:
-        return {"status": "ok", "db": "healthy"}
+app.include_router(tables.router)
+app.include_router(reservations.router)
