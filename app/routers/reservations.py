@@ -32,17 +32,6 @@ async def create_reservation(
     return created
 
 
-@router.get("/{reservation_id}", response_model=ReservationRead)
-async def get_reservation_by_id(
-    reservation_id: int,
-    service: ReservationService = Depends(get_reservation_service),
-):
-    reservation = await service.get_by_id(reservation_id)
-    if not reservation:
-        raise HTTPException(status_code=404, detail="Reservation not found")
-    return reservation
-
-
 @router.delete("/{reservation_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_reservation(
     reservation_id: int,

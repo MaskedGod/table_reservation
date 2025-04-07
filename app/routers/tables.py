@@ -23,17 +23,6 @@ async def create_table(
     return await service.create(new_table)
 
 
-@router.get("/{table_id}", response_model=TableRead)
-async def get_table_by_id(
-    table_id: int,
-    service: TableService = Depends(get_table_service),
-):
-    table = await service.get_by_id(table_id)
-    if not table:
-        raise HTTPException(status_code=404, detail="Table not found")
-    return table
-
-
 @router.delete("/{table_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_table(
     table_id: int,
