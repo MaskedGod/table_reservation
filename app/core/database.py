@@ -9,11 +9,11 @@ class Base(DeclarativeBase):
 
 
 async_engine = create_async_engine(
-    db_settings.database_url, poll_pre_ping=True, echo=False
+    db_settings.database_url, pool_pre_ping=True, echo=False
 )
 
 async_session = async_sessionmaker(
-    async_engine, _class=AsyncSession, expire_on_commit=False
+    bind=async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
 

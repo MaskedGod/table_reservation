@@ -9,6 +9,9 @@ class DatabaseSettings(BaseSettings):
     db_pass: str
     db_name: str
 
+    pgadmin_default_email: str
+    pgadmin_default_password: str
+
     test_db_host: str
     test_db_port: int
     test_db_user: str
