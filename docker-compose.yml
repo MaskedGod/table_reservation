@@ -7,7 +7,6 @@ services:
       POSTGRES_DB: "${DB_NAME}"
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_PASSWORD: "${DB_PASS}"
-      PGPORT: ${DB_PORT}
     expose:
       - ${DB_PORT}
     ports:
@@ -20,22 +19,22 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-
-  pgadmin:
-    image: dpage/pgadmin4
-    # http://localhost:15433
-    ports:
-      - 15433:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    depends_on:
-      - pg
     networks:
-      - postgres-network
+      - app-network
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASS}@pg:${DB_PORT}/${DB_NAME}"
+    depends_on:
+      pg:
+        condition: service_healthy
     volumes:
-      - ./_pgadmin-data/:/var/lib/pgadmin/
+      - ./_data/app:/app/data
+    networks:
+      - app-network
 
 networks:
-  postgres-network:
+  app-network:
     driver: bridge

@@ -8,8 +8,7 @@ wheels/
 *.egg-info
 .ruff_cache
 .venv
-
+.pytest_cache
 
 **sketch**
 _data
-_pgadmin-data
