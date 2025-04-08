@@ -18,7 +18,15 @@ async_session = async_sessionmaker(
 
 
 async def get_db():
-    "Yields database session"
+    """
+    Возвращает асинхронную сессию базы данных.
+
+    Создает сессию, обеспечивает её корректное закрытие и откат изменений
+    в случае ошибок. Предназначена для использования как зависимость в FastAPI.
+
+    Обработка ошибок:
+        При исключении выполняется rollback, затем сессия закрывается.
+    """
     async with async_session() as session:
         try:
             yield session

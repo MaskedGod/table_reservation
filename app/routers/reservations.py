@@ -11,6 +11,15 @@ router = APIRouter(prefix="/reservations", tags=["Reservations"])
 async def get_reservations(
     service: ReservationService = Depends(get_reservation_service),
 ):
+    """
+    Получить список всех бронирований.
+
+    Возвращает список всех существующих бронирований в системе.
+    Использует сервис `ReservationService` для выполнения запроса к базе данных.
+
+    Возвращает:
+        list[ReservationRead]: Список бронирований в формате `ReservationRead`.
+    """
     return await service.get_all()
 
 
@@ -19,6 +28,21 @@ async def create_reservation(
     reservation_in: ReservationCreate,
     service: ReservationService = Depends(get_reservation_service),
 ):
+    """
+    Создать новое бронирование.
+
+    Проверяет доступность столика на указанное время и создает бронирование,
+    если нет конфликтов. Если столик уже забронирован, возвращает ошибку 409 Conflict.
+
+    Аргументы:
+        reservation_in (ReservationCreate): Данные для создания нового бронирования.
+
+    Возвращает:
+        ReservationRead: Созданное бронирование в формате `ReservationRead`.
+
+    Исключения:
+        HTTPException(409): Если столик уже забронирован на указанное время.
+    """
     from app.models.reservation import Reservation
 
     reservation = Reservation(**reservation_in.model_dump())
@@ -37,6 +61,18 @@ async def delete_reservation(
     reservation_id: int,
     service: ReservationService = Depends(get_reservation_service),
 ):
+    """
+    Удалить бронирование по ID.
+
+    Удаляет бронирование с указанным ID. Если бронирование не найдено,
+    возвращает ошибку 404 Not Found.
+
+    Аргументы:
+        reservation_id (int): Идентификатор бронирования для удаления.
+
+    Исключения:
+        HTTPException(404): Если бронирование с указанным ID не существует.
+    """
     success = await service.delete(reservation_id)
     if not success:
         raise HTTPException(status_code=404, detail="Reservation not found")
